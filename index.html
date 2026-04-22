@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>健身器械使用教程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --light: #F7FFF7;
+            --dark: #2C3E50;
+            --success: #00C853;
+            --warning: #FFAB00;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            max-width: 480px;
+            margin: 0 auto;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .page {
+            display: none;
+            height: 100%;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .bottom-nav {
+            display: flex;
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        .nav-item {
+            flex: 1;
+            padding: 10px 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 0 0 3px 3px;
+            transition: width 0.3s ease;
+        }
+
+        .nav-item.active::before {
+            width: 60%;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item svg {
+            width: 28px;
+            height: 28px;
+            margin-bottom: 4px;
+            fill: currentColor;
+        }
+
+        .nav-item span {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .video-card {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background-color: #f0f0f0;
+            overflow: hidden;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 107, 107, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .play-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+            margin-left: 4px;
+        }
+
+        .video-info {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .video-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+            flex: 1;
+        }
+
+        .favorite-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            transition: transform 0.2s ease;
+        }
+
+        .favorite-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .favorite-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: #ccc;
+            transition: fill 0.3s ease;
+        }
+
+        .favorite-btn.active svg {
+            fill: var(--primary);
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .close-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: #666;
+        }
+
+        .modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .video-player {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            background-color: #000;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .video-description {
+            margin-top: 15px;
+            line-height: 1.6;
+            color: #666;
+        }
+
+        .video-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #999;
+        }
+
+        .camera-container {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .camera-preview {
+            width: 100%;
+            max-width: 400px;
+            height: 300px;
+            background-color: #f0f0f0;
+            border-radius: 12px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .camera-preview video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .camera-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .camera-placeholder {
+            text-align: center;
+            color: #999;
+        }
+
+        .camera-placeholder svg {
+            width: 80px;
+            height: 80px;
+            fill: #ccc;
+            margin-bottom: 10px;
+        }
+
+        .camera-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .camera-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .camera-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .camera-btn:active {
+            transform: translateY(0);
+        }
+
+        .camera-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .analysis-loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .analysis-loading.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--dark);
+            display: none;
+        }
+
+        .results-title.active {
+            display: block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 100px;
+            height: 100px;
+            fill: #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--dark);
+            padding-left: 5px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header" id="header">
+            健身器械教程
+        </header>
+
+        <main class="main-content">
+            <!-- 首页 -->
+            <div class="page active" id="home-page">
+                <h2 class="section-title">热门器械教程</h2>
+                <div id="home-video-list"></div>
+            </div>
+
+            <!-- 拍照页 -->
+            <div class="page" id="camera-page">
+                <div class="camera-container">
+                    <div class="camera-preview" id="camera-preview">
+                        <div class="camera-placeholder" id="camera-placeholder">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm0-7c-2.21 0-4.17.9-5.61 2.34L4 4.73V7H1V17h3v2.27l2.39-2.39C7.83 20.1 9.79 21 12 21c2.76 0 5.26-1.12 7.07-2.93C20.88 16.26 22 13.76 22 11s-1.12-5.26-2.93-7.07C17.26 2.12 14.76 1 12 1zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                            </svg>
+                            <p>拍照或上传图片</p>
+                            <p>识别健身器械</p>
+                        </div>
+                        <video id="camera-video" autoplay playsinline muted class="hidden"></video>
+                        <img id="captured-image" alt="Captured" class="hidden">
+                    </div>
+                    
+                    <div class="camera-buttons" id="camera-controls">
+                        <button class="camera-btn" id="start-camera-btn">
+                            开启摄像头
+                        </button>
+                        <button class="camera-btn" id="upload-btn">
+                            上传图片
+                        </button>
+                    </div>
+
+                    <div class="camera-buttons hidden" id="capture-controls">
+                        <button class="camera-btn" id="capture-btn">
+                            拍照识别
+                        </button>
+                        <button class="camera-btn" id="switch-camera-btn">
+                            切换镜头
+                        </button>
+                        <button class="camera-btn" id="stop-camera-btn">
+                            关闭
+                        </button>
+                    </div>
+
+                    <div class="camera-buttons hidden" id="analyze-controls">
+                        <button class="camera-btn" id="analyze-btn">
+                            分析图片
+                        </button>
+                        <button class="camera-btn" id="retake-btn">
+                            重新拍摄
+                        </button>
+                    </div>
+
+                    <div class="analysis-loading" id="analysis-loading">
+                        <div class="spinner"></div>
+                        <p>正在分析图片中的健身器械...</p>
+                    </div>
+
+                    <h2 class="results-title" id="results-title">识别结果 - 相关教程</h2>
+                    <div id="camera-video-list"></div>
+                </div>
+            </div>
+
+            <!-- 我的页面 -->
+            <div class="page" id="profile-page">
+                <h2 class="section-title">我的收藏</h2>
+                <div id="favorites-list"></div>
+                <div class="empty-state hidden" id="empty-favorites">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                    <h3>还没有收藏</h3>
+                    <p>浏览首页或拍照识别器械<br>点击爱心图标收藏喜欢的教程</p>
+                </div>
+            </div>
+        </main>
+
+        <nav class="bottom-nav">
+            <div class="nav-item active" data-page="home-page">
+                <svg viewBox="0 0 24 24">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+                <span>首页</span>
+            </div>
+            <div class="nav-item" data-page="camera-page">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3.2"/>
+                    <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+                </svg>
+                <span>拍照</span>
+            </div>
+            <div class="nav-item" data-page="profile-page">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                <span>我的</span>
+            </div>
+        </nav>
+    </div>
+
+    <!-- 视频播放模态框 -->
+    <div class="modal" id="video-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">视频标题</h3>
+                <button class="close-btn" id="close-modal-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="video-player" id="video-player">
+                    <div style="text-align: center;">
+                        <svg width="80" height="80" viewBox="0 0 24 24" style="fill: white; margin-bottom: 10px;">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        <p>视频播放区域</p>
+                    </div>
+                </div>
+                <h3 id="modal-video-title" style="font-size: 18px; margin-bottom: 10px;"></h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <div class="video-meta">
+                        <span id="modal-duration">时长: 3:45</span>
+                        <span id="modal-level">难度: 中级</span>
+                    </div>
+                    <button class="favorite-btn" id="modal-favorite-btn">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="video-description" id="modal-description">
+                    <p>详细的器械使用说明将在这里展示。包括正确的姿势、呼吸方法、注意事项等。</p>
+                    <p style="margin-top: 10px;">使用本器械时，请确保：</p>
+                    <ul style="margin-top: 5px; padding-left: 20px;">
+                        <li>热身充分</li>
+                        <li>选择合适的重量</li>
+                        <li>保持正确姿势</li>
+                        <li>循序渐进</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="file-input" accept="image/*" style="display: none;">
+
+    <script>
+        const videoData = [
+            {
+                id: 1,
+                title: '跑步机使用教程',
+                thumbnail: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=gym%20treadmill%20equipment%20modern%20fitness%20center&image_size=square_hd',
+                duration: '4:20',
+                level: '初级',
+                equipment: 'treadmill',
+                description: '跑步机是最常见的有氧运动器械。本教程将教你如何正确使用跑步机，包括速度调节、坡度设置、安全注意事项等。'
+            },
+            {
+                id: 2,
+                title: '哑铃卧推教程',
+                thumbnail: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=dumbbell%20bench%20press%20gym%20workout%20chest%20exercise&image_size=square_hd',
+                duration: '5:30',
+                level: '中级',
+                equipment: 'dumbbell',
+                description: '哑铃卧推是锻炼胸大肌的经典动作。学习正确的握法、躺姿、推起和下放动作，避免肩部受伤。'
+            },
+            {
+                id: 3,
+                title: '椭圆机使用教程',
+                thumbnail: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=elliptical%20trainer%20gym%20cardio%20machine%20modern%20fitness&image_size=square_hd',
+                duration: '3:45',
+                level: '初级',
+                equipment: 'elliptical',
+                description: '椭圆机是低冲击有氧运动的理想选择。了解如何调节阻力、使用把手、保持正确姿势，最大化锻炼效果。'
+            },
+            {
+                id: 4,
+                title: '深蹲架使用教程',
+                thumbnail: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=squat%20rack%20gym%20weight%20training%20leg%20exercise&image_size=square_hd',
+                duration: '6:15',
+                level: '高级',
+                equipment: 'squat-rack',
+                description: '深蹲架是进行深蹲训练的必备器械。学习正确的架子设置、安全杠使用、深蹲姿势，安全高效地锻炼腿部肌肉。'
+            },
+            {
+                id: 5,
+                title: '高位下拉器教程',
+                thumbnail: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=lat%20pulldown%20machine%20gym%20back%20workout%20cable&image_size=square_hd',
+                duration: '4:50',
+                level: '中级',
+                equipment: 'lat-pulldown',
+                description: '高位下拉器是锻炼背部宽度的利器。掌握正确的握距、下拉路径、收缩动作，打造完美V型背。'
+            },
+            {
+                id: 6,
+                title: '动感单车教程',
+                thumbnail: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=spinning%20bike%20indoor%20cycling%20gym%20cardio%20class&image_size=square_hd',
+                duration: '7:20',
+                level: '中级',
+                equipment: 'spinning',
+                description: '动感单车是高强度有氧训练的热门选择。学习如何调节车座高度、把手位置、阻力控制，以及正确的骑行姿势。'
+            },
+            {
+                id: 7,
+                title: '史密斯机使用教程',
+                thumbnail: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=smith%20machine%20gym%20weight%20training%20guided%20barbell&image_size=square_hd',
+                duration: '5:40',
+                level: '中级',
+                equipment: 'smith-machine',
+                description: '史密斯机提供稳定的轨迹控制，适合初学者和进阶者。了解各种练习动作：卧推、深蹲、划船等。'
+            },
+            {
+                id: 8,
+                title: '坐姿腿举机教程',
+                thumbnail: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=leg%20press%20machine%20gym%20quadriceps%20workout%20seat&image_size=square_hd',
+                duration: '4:10',
+                level: '初级',
+                equipment: 'leg-press',
+                description: '坐姿腿举机是锻炼大腿前侧的安全选择。学习正确的脚位、膝盖角度、推起和收回动作。'
+            }
+        ];
+
+        const equipmentKeywords = {
+            'treadmill': ['跑步机', '跑台', 'treadmill', 'running', '跑步'],
+            'dumbbell': ['哑铃', 'dumbbell', 'weight', '杠铃', 'barbell'],
+            'elliptical': ['椭圆机', 'elliptical', '太空漫步机', '漫步机'],
+            'squat-rack': ['深蹲架', 'squat', 'rack', '卧推架', 'power rack'],
+            'lat-pulldown': ['高位下拉', 'lat pulldown', '下拉器', '背部训练器'],
+            'spinning': ['动感单车', 'spinning', '自行车', '单车', 'cycling'],
+            'smith-machine': ['史密斯', 'smith', '史密斯架', 'guided barbell'],
+            'leg-press': ['腿举', 'leg press', '腿部推举', '腿举机']
+        };
+
+        let favorites = JSON.parse(localStorage.getItem('fitnessFavorites')) || [];
+        let currentPage = 'home-page';
+        let currentVideo = null;
+        let cameraStream = null;
+        let facingMode = 'environment';
+
+        const header = document.getElementById('header');
+        const pages = document.querySelectorAll('.page');
+        const navItems = document.querySelectorAll('.nav-item');
+        const videoModal = document.getElementById('video-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const homeVideoList = document.getElementById('home-video-list');
+        const cameraVideoList = document.getElementById('camera-video-list');
+        const favoritesList = document.getElementById('favorites-list');
+        const emptyFavorites = document.getElementById('empty-favorites');
+        const resultsTitle = document.getElementById('results-title');
+        const analysisLoading = document.getElementById('analysis-loading');
+
+        const startCameraBtn = document.getElementById('start-camera-btn');
+        const uploadBtn = document.getElementById('upload-btn');
+        const captureBtn = document.getElementById('capture-btn');
+        const switchCameraBtn = document.getElementById('switch-camera-btn');
+        const stopCameraBtn = document.getElementById('stop-camera-btn');
+        const analyzeBtn = document.getElementById('analyze-btn');
+        const retakeBtn = document.getElementById('retake-btn');
+        const fileInput = document.getElementById('file-input');
+
+        const cameraVideo = document.getElementById('camera-video');
+        const capturedImage = document.getElementById('captured-image');
+        const cameraPlaceholder = document.getElementById('camera-placeholder');
+        const cameraControls = document.getElementById('camera-controls');
+        const captureControls = document.getElementById('capture-controls');
+        const analyzeControls = document.getElementById('analyze-controls');
+
+        function init() {
+            renderHomeVideos();
+            renderFavorites();
+            setupEventListeners();
+        }
+
+        function createVideoCard(video) {
+            const isFavorite = favorites.includes(video.id);
+            return `
+                <div class="video-card" data-video-id="${video.id}">
+                    <div class="video-thumbnail">
+                        <img src="${video.thumbnail}" alt="${video.title}" loading="lazy">
+                        <div class="play-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <div>
+                            <div class="video-title">${video.title}</div>
+                            <div class="video-meta" style="margin-top: 5px; gap: 10px;">
+                                <span>⏱ ${video.duration}</span>
+                                <span>📊 ${video.level}</span>
+                            </div>
+                        </div>
+                        <button class="favorite-btn ${isFavorite ? 'active' : ''}" data-video-id="${video.id}">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderHomeVideos() {
+            homeVideoList.innerHTML = videoData.map(video => createVideoCard(video)).join('');
+        }
+
+        function renderCameraVideos(videos) {
+            if (videos && videos.length > 0) {
+                resultsTitle.classList.add('active');
+                cameraVideoList.innerHTML = videos.map(video => createVideoCard(video)).join('');
+            } else {
+                resultsTitle.classList.remove('active');
+                cameraVideoList.innerHTML = '';
+            }
+        }
+
+        function renderFavorites() {
+            const favoriteVideos = videoData.filter(video => favorites.includes(video.id));
+            
+            if (favoriteVideos.length === 0) {
+                favoritesList.innerHTML = '';
+                emptyFavorites.classList.remove('hidden');
+            } else {
+                emptyFavorites.classList.add('hidden');
+                favoritesList.innerHTML = favoriteVideos.map(video => createVideoCard(video)).join('');
+            }
+        }
+
+        function switchToPage(pageId) {
+            pages.forEach(page => {
+                page.classList.toggle('active', page.id === pageId);
+            });
+            
+            navItems.forEach(item => {
+                item.classList.toggle('active', item.dataset.page === pageId);
+            });
+
+            currentPage = pageId;
+
+            if (pageId === 'camera-page') {
+                header.textContent = '拍照识别';
+            } else if (pageId === 'profile-page') {
+                header.textContent = '我的收藏';
+                renderFavorites();
+            } else {
+                header.textContent = '健身器械教程';
+            }
+        }
+
+        function openVideoModal(videoId) {
+            const video = videoData.find(v => v.id === videoId);
+            if (!video) return;
+
+            currentVideo = video;
+            document.getElementById('modal-title').textContent = video.title;
+            document.getElementById('modal-video-title').textContent = video.title;
+            document.getElementById('modal-duration').textContent = `时长: ${video.duration}`;
+            document.getElementById('modal-level').textContent = `难度: ${video.level}`;
+            document.getElementById('modal-description').innerHTML = `
+                <p>${video.description}</p>
+                <p style="margin-top: 10px;">使用本器械时，请确保：</p>
+                <ul style="margin-top: 5px; padding-left: 20px;">
+                    <li>热身充分</li>
+                    <li>选择合适的重量</li>
+                    <li>保持正确姿势</li>
+                    <li>循序渐进</li>
+                </ul>
+            `;
+
+            const modalFavoriteBtn = document.getElementById('modal-favorite-btn');
+            const isFavorite = favorites.includes(video.id);
+            modalFavoriteBtn.classList.toggle('active', isFavorite);
+
+            videoModal.classList.add('active');
+        }
+
+        function closeVideoModal() {
+            videoModal.classList.remove('active');
+            currentVideo = null;
+        }
+
+        function toggleFavorite(videoId) {
+            const index = favorites.indexOf(videoId);
+            if (index > -1) {
+                favorites.splice(index, 1);
+            } else {
+                favorites.push(videoId);
+            }
+            localStorage.setItem('fitnessFavorites', JSON.stringify(favorites));
+
+            updateFavoriteButtons(videoId);
+
+            if (currentVideo && currentVideo.id === videoId) {
+                const modalFavoriteBtn = document.getElementById('modal-favorite-btn');
+                modalFavoriteBtn.classList.toggle('active', favorites.includes(videoId));
+            }
+
+            if (currentPage === 'profile-page') {
+                renderFavorites();
+            }
+        }
+
+        function updateFavoriteButtons(videoId) {
+            const isFavorite = favorites.includes(videoId);
+            document.querySelectorAll(`.favorite-btn[data-video-id="${videoId}"]`).forEach(btn => {
+                btn.classList.toggle('active', isFavorite);
+            });
+        }
+
+        async function startCamera() {
+            try {
+                if (cameraStream) {
+                    cameraStream.getTracks().forEach(track => track.stop());
+                }
+
+                cameraStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: facingMode, width: { ideal: 1280 }, height: { ideal: 720 } },
+                    audio: false
+                });
+
+                cameraVideo.srcObject = cameraStream;
+                cameraVideo.classList.remove('hidden');
+                cameraPlaceholder.classList.add('hidden');
+                capturedImage.classList.add('hidden');
+
+                cameraControls.classList.add('hidden');
+                captureControls.classList.remove('hidden');
+                analyzeControls.classList.add('hidden');
+
+            } catch (error) {
+                console.error('Camera error:', error);
+                alert('无法访问摄像头，请检查权限设置。您也可以使用上传图片功能。');
+            }
+        }
+
+        function stopCamera() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+
+            cameraVideo.classList.add('hidden');
+            cameraVideo.srcObject = null;
+            cameraPlaceholder.classList.remove('hidden');
+            capturedImage.classList.add('hidden');
+
+            cameraControls.classList.remove('hidden');
+            captureControls.classList.add('hidden');
+            analyzeControls.classList.add('hidden');
+        }
+
+        function switchCamera() {
+            facingMode = facingMode === 'environment' ? 'user' : 'environment';
+            startCamera();
+        }
+
+        function captureImage() {
+            const canvas = document.createElement('canvas');
+            canvas.width = cameraVideo.videoWidth;
+            canvas.height = cameraVideo.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(cameraVideo, 0, 0);
+
+            const imageDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+            showCapturedImage(imageDataUrl);
+
+            stopCamera();
+        }
+
+        function showCapturedImage(imageUrl) {
+            capturedImage.src = imageUrl;
+            capturedImage.classList.remove('hidden');
+            cameraVideo.classList.add('hidden');
+            cameraPlaceholder.classList.add('hidden');
+
+            cameraControls.classList.add('hidden');
+            captureControls.classList.add('hidden');
+            analyzeControls.classList.remove('hidden');
+        }
+
+        function triggerFileUpload() {
+            fileInput.click();
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                showCapturedImage(e.target.result);
+            };
+            reader.readAsDataURL(file);
+            fileInput.value = '';
+        }
+
+        function analyzeImage() {
+            analysisLoading.classList.add('active');
+            resultsTitle.classList.remove('active');
+            cameraVideoList.innerHTML = '';
+
+            setTimeout(() => {
+                const allEquipments = Object.keys(equipmentKeywords);
+                const randomCount = Math.floor(Math.random() * 3) + 1;
+                const shuffled = allEquipments.sort(() => 0.5 - Math.random());
+                const selectedEquipments = shuffled.slice(0, randomCount);
+
+                const relatedVideos = videoData.filter(video => 
+                    selectedEquipments.includes(video.equipment)
+                );
+
+                analysisLoading.classList.remove('active');
+
+                if (relatedVideos.length > 0) {
+                    renderCameraVideos(relatedVideos);
+                } else {
+                    const randomVideos = videoData.sort(() => 0.5 - Math.random()).slice(0, 3);
+                    renderCameraVideos(randomVideos);
+                }
+
+                setTimeout(() => {
+                    const resultsSection = cameraVideoList;
+                    if (resultsSection) {
+                        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 100);
+
+            }, 2000);
+        }
+
+        function retake() {
+            capturedImage.classList.add('hidden');
+            capturedImage.src = '';
+            cameraPlaceholder.classList.remove('hidden');
+
+            cameraControls.classList.remove('hidden');
+            captureControls.classList.add('hidden');
+            analyzeControls.classList.add('hidden');
+
+            resultsTitle.classList.remove('active');
+            cameraVideoList.innerHTML = '';
+        }
+
+        function setupEventListeners() {
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    switchToPage(item.dataset.page);
+                });
+            });
+
+            closeModalBtn.addEventListener('click', closeVideoModal);
+            videoModal.addEventListener('click', (e) => {
+                if (e.target === videoModal) {
+                    closeVideoModal();
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                const videoCard = e.target.closest('.video-card');
+                if (videoCard && !e.target.closest('.favorite-btn')) {
+                    const videoId = parseInt(videoCard.dataset.videoId);
+                    openVideoModal(videoId);
+                }
+
+                if (e.target.closest('.favorite-btn')) {
+                    const btn = e.target.closest('.favorite-btn');
+                    const videoId = parseInt(btn.dataset.videoId);
+                    toggleFavorite(videoId);
+                }
+            });
+
+            document.getElementById('modal-favorite-btn').addEventListener('click', () => {
+                if (currentVideo) {
+                    toggleFavorite(currentVideo.id);
+                }
+            });
+
+            startCameraBtn.addEventListener('click', startCamera);
+            uploadBtn.addEventListener('click', triggerFileUpload);
+            captureBtn.addEventListener('click', captureImage);
+            switchCameraBtn.addEventListener('click', switchCamera);
+            stopCameraBtn.addEventListener('click', stopCamera);
+            analyzeBtn.addEventListener('click', analyzeImage);
+            retakeBtn.addEventListener('click', retake);
+            fileInput.addEventListener('change', handleFileUpload);
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && videoModal.classList.contains('active')) {
+                    closeVideoModal();
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
