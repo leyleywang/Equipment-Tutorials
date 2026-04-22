@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>健身器械使用教程</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -445,6 +446,64 @@
         .hidden {
             display: none !important;
         }
+
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            -moz-osx-font-smoothing: grayscale;
+            font-feature-settings: 'liga';
+        }
+
+        .nav-item .material-icons {
+            font-size: 28px;
+            margin-bottom: 4px;
+        }
+
+        .play-icon .material-icons {
+            font-size: 32px;
+            color: white;
+        }
+
+        .favorite-btn .material-icons {
+            font-size: 28px;
+            transition: color 0.3s ease;
+        }
+
+        .favorite-btn .material-icons {
+            color: #ccc;
+        }
+
+        .favorite-btn.active .material-icons {
+            color: var(--primary);
+        }
+
+        .close-btn .material-icons {
+            font-size: 28px;
+            color: #666;
+        }
+
+        .empty-state .material-icons {
+            font-size: 80px;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        .camera-placeholder .material-icons {
+            font-size: 80px;
+            color: #ccc;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -465,9 +524,7 @@
                 <div class="camera-container">
                     <div class="camera-preview" id="camera-preview">
                         <div class="camera-placeholder" id="camera-placeholder">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm0-7c-2.21 0-4.17.9-5.61 2.34L4 4.73V7H1V17h3v2.27l2.39-2.39C7.83 20.1 9.79 21 12 21c2.76 0 5.26-1.12 7.07-2.93C20.88 16.26 22 13.76 22 11s-1.12-5.26-2.93-7.07C17.26 2.12 14.76 1 12 1zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
-                            </svg>
+                            <span class="material-icons">add_a_photo</span>
                             <p>拍照或上传图片</p>
                             <p>识别健身器械</p>
                         </div>
@@ -520,9 +577,7 @@
                 <h2 class="section-title">我的收藏</h2>
                 <div id="favorites-list"></div>
                 <div class="empty-state hidden" id="empty-favorites">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                    </svg>
+                    <span class="material-icons">favorite_border</span>
                     <h3>还没有收藏</h3>
                     <p>浏览首页或拍照识别器械<br>点击爱心图标收藏喜欢的教程</p>
                 </div>
@@ -531,22 +586,15 @@
 
         <nav class="bottom-nav">
             <div class="nav-item active" data-page="home-page">
-                <svg viewBox="0 0 24 24">
-                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                </svg>
+                <span class="material-icons">home</span>
                 <span>首页</span>
             </div>
             <div class="nav-item" data-page="camera-page">
-                <svg viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="3.2"/>
-                    <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
-                </svg>
+                <span class="material-icons">photo_camera</span>
                 <span>拍照</span>
             </div>
             <div class="nav-item" data-page="profile-page">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                </svg>
+                <span class="material-icons">person</span>
                 <span>我的</span>
             </div>
         </nav>
@@ -558,17 +606,13 @@
             <div class="modal-header">
                 <h3 class="modal-title" id="modal-title">视频标题</h3>
                 <button class="close-btn" id="close-modal-btn">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                    </svg>
+                    <span class="material-icons">close</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="video-player" id="video-player">
                     <div style="text-align: center;">
-                        <svg width="80" height="80" viewBox="0 0 24 24" style="fill: white; margin-bottom: 10px;">
-                            <path d="M8 5v14l11-7z"/>
-                        </svg>
+                        <span class="material-icons" style="font-size: 80px; color: white; margin-bottom: 10px;">play_circle</span>
                         <p>视频播放区域</p>
                     </div>
                 </div>
@@ -579,9 +623,7 @@
                         <span id="modal-level">难度: 中级</span>
                     </div>
                     <button class="favorite-btn" id="modal-favorite-btn">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                        </svg>
+                        <span class="material-icons">favorite_border</span>
                     </button>
                 </div>
                 <div class="video-description" id="modal-description">
@@ -593,6 +635,31 @@
                         <li>保持正确姿势</li>
                         <li>循序渐进</li>
                     </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 图片预览模态框 -->
+    <div class="modal" id="image-preview-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">图片预览</h3>
+                <button class="close-btn" id="close-image-modal-btn">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 15px;">
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <img id="preview-image" style="max-width: 100%; max-height: 400px; border-radius: 8px;" alt="预览图片">
+                </div>
+                <div style="display: flex; gap: 15px; justify-content: center;">
+                    <button class="camera-btn" id="analyze-image-btn">
+                        分析识别
+                    </button>
+                    <button class="camera-btn" id="retake-image-btn" style="background: #757575;">
+                        取消/重拍
+                    </button>
                 </div>
             </div>
         </div>
@@ -692,6 +759,7 @@
         let currentVideo = null;
         let cameraStream = null;
         let facingMode = 'environment';
+        let currentPreviewImage = null;
 
         const header = document.getElementById('header');
         const pages = document.querySelectorAll('.page');
@@ -704,6 +772,12 @@
         const emptyFavorites = document.getElementById('empty-favorites');
         const resultsTitle = document.getElementById('results-title');
         const analysisLoading = document.getElementById('analysis-loading');
+
+        const imagePreviewModal = document.getElementById('image-preview-modal');
+        const previewImage = document.getElementById('preview-image');
+        const closeImageModalBtn = document.getElementById('close-image-modal-btn');
+        const analyzeImageBtn = document.getElementById('analyze-image-btn');
+        const retakeImageBtn = document.getElementById('retake-image-btn');
 
         const startCameraBtn = document.getElementById('start-camera-btn');
         const uploadBtn = document.getElementById('upload-btn');
@@ -734,9 +808,7 @@
                     <div class="video-thumbnail">
                         <img src="${video.thumbnail}" alt="${video.title}" loading="lazy">
                         <div class="play-icon">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z"/>
-                            </svg>
+                            <span class="material-icons">play_arrow</span>
                         </div>
                     </div>
                     <div class="video-info">
@@ -748,9 +820,7 @@
                             </div>
                         </div>
                         <button class="favorite-btn ${isFavorite ? 'active' : ''}" data-video-id="${video.id}">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                            </svg>
+                            <span class="material-icons">${isFavorite ? 'favorite' : 'favorite_border'}</span>
                         </button>
                     </div>
                 </div>
@@ -861,6 +931,10 @@
             const isFavorite = favorites.includes(videoId);
             document.querySelectorAll(`.favorite-btn[data-video-id="${videoId}"]`).forEach(btn => {
                 btn.classList.toggle('active', isFavorite);
+                const icon = btn.querySelector('.material-icons');
+                if (icon) {
+                    icon.textContent = isFavorite ? 'favorite' : 'favorite_border';
+                }
             });
         }
 
@@ -912,6 +986,11 @@
         }
 
         function captureImage() {
+            if (!cameraVideo.videoWidth || !cameraVideo.videoHeight) {
+                alert('摄像头尚未准备好，请稍后再试。');
+                return;
+            }
+
             const canvas = document.createElement('canvas');
             canvas.width = cameraVideo.videoWidth;
             canvas.height = cameraVideo.videoHeight;
@@ -919,9 +998,9 @@
             ctx.drawImage(cameraVideo, 0, 0);
 
             const imageDataUrl = canvas.toDataURL('image/jpeg', 0.8);
-            showCapturedImage(imageDataUrl);
-
+            
             stopCamera();
+            openImagePreviewModal(imageDataUrl);
         }
 
         function showCapturedImage(imageUrl) {
@@ -935,6 +1014,18 @@
             analyzeControls.classList.remove('hidden');
         }
 
+        function openImagePreviewModal(imageUrl) {
+            currentPreviewImage = imageUrl;
+            previewImage.src = imageUrl;
+            imagePreviewModal.classList.add('active');
+        }
+
+        function closeImagePreviewModal() {
+            imagePreviewModal.classList.remove('active');
+            previewImage.src = '';
+            currentPreviewImage = null;
+        }
+
         function triggerFileUpload() {
             fileInput.click();
         }
@@ -945,7 +1036,7 @@
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                showCapturedImage(e.target.result);
+                openImagePreviewModal(e.target.result);
             };
             reader.readAsDataURL(file);
             fileInput.value = '';
@@ -1041,9 +1132,31 @@
             retakeBtn.addEventListener('click', retake);
             fileInput.addEventListener('change', handleFileUpload);
 
+            closeImageModalBtn.addEventListener('click', closeImagePreviewModal);
+            imagePreviewModal.addEventListener('click', (e) => {
+                if (e.target === imagePreviewModal) {
+                    closeImagePreviewModal();
+                }
+            });
+
+            analyzeImageBtn.addEventListener('click', () => {
+                if (currentPreviewImage) {
+                    showCapturedImage(currentPreviewImage);
+                    closeImagePreviewModal();
+                    analyzeImage();
+                }
+            });
+
+            retakeImageBtn.addEventListener('click', () => {
+                closeImagePreviewModal();
+            });
+
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' && videoModal.classList.contains('active')) {
                     closeVideoModal();
+                }
+                if (e.key === 'Escape' && imagePreviewModal.classList.contains('active')) {
+                    closeImagePreviewModal();
                 }
             });
         }
