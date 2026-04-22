@@ -294,6 +294,17 @@
             margin-top: 15px;
             font-size: 14px;
             color: #999;
+            align-items: center;
+        }
+
+        .video-meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .video-meta-item .material-icons {
+            font-size: 16px;
         }
 
         .camera-container {
@@ -618,9 +629,15 @@
                 </div>
                 <h3 id="modal-video-title" style="font-size: 18px; margin-bottom: 10px;"></h3>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <div class="video-meta">
-                        <span id="modal-duration">时长: 3:45</span>
-                        <span id="modal-level">难度: 中级</span>
+                    <div class="video-meta" id="modal-meta">
+                        <span class="video-meta-item">
+                            <span class="material-icons">schedule</span>
+                            <span id="modal-duration">3:45</span>
+                        </span>
+                        <span class="video-meta-item">
+                            <span class="material-icons">trending_up</span>
+                            <span id="modal-level">中级</span>
+                        </span>
                     </div>
                     <button class="favorite-btn" id="modal-favorite-btn">
                         <span class="material-icons">favorite_border</span>
@@ -814,9 +831,15 @@
                     <div class="video-info">
                         <div>
                             <div class="video-title">${video.title}</div>
-                            <div class="video-meta" style="margin-top: 5px; gap: 10px;">
-                                <span>⏱ ${video.duration}</span>
-                                <span>📊 ${video.level}</span>
+                            <div class="video-meta" style="margin-top: 5px; gap: 15px;">
+                                <span class="video-meta-item">
+                                    <span class="material-icons">schedule</span>
+                                    ${video.duration}
+                                </span>
+                                <span class="video-meta-item">
+                                    <span class="material-icons">trending_up</span>
+                                    ${video.level}
+                                </span>
                             </div>
                         </div>
                         <button class="favorite-btn ${isFavorite ? 'active' : ''}" data-video-id="${video.id}">
@@ -881,8 +904,8 @@
             currentVideo = video;
             document.getElementById('modal-title').textContent = video.title;
             document.getElementById('modal-video-title').textContent = video.title;
-            document.getElementById('modal-duration').textContent = `时长: ${video.duration}`;
-            document.getElementById('modal-level').textContent = `难度: ${video.level}`;
+            document.getElementById('modal-duration').textContent = video.duration;
+            document.getElementById('modal-level').textContent = video.level;
             document.getElementById('modal-description').innerHTML = `
                 <p>${video.description}</p>
                 <p style="margin-top: 10px;">使用本器械时，请确保：</p>
